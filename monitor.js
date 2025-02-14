@@ -10,6 +10,7 @@ var urls = fs.readFileSync(config.urls).toString().split("\n");
 
 async function fetchURLs() {
 
+    console.log("Current Date and Time:", new Date().toLocaleString());
     console.log("Getting URL data...");
 
     var apiRequests = urls.map(url => axios.get(url, { timeout: config.timeout }));
@@ -17,6 +18,7 @@ async function fetchURLs() {
     var results = await Promise.allSettled(apiRequests);
 
     results.forEach((result, index) => {
+        console.log(`Processing URL ${index + 1}:`, urls[index]);
         if (result.status === "fulfilled") {
             console.log(`${index + 1} Success:`, result.value.config.url, result.value.statusText, result.value.status);
         } else {
@@ -24,7 +26,7 @@ async function fetchURLs() {
         }
     });
 
-    console.log("All requests completed");
+    console.log("All requests completed\n");
 
     await delay(checkInterval);
 
