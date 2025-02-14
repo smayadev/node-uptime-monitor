@@ -1,0 +1,5 @@
+{
+    "urls": "urls.txt",
+    "checkInterval": 60000,
+    "timeout": 5000
+  }
