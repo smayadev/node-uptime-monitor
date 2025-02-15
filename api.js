@@ -1,8 +1,30 @@
 const express = require('express');
+const mariadb = require('mariadb');
+const config = require('./config.json');
 const app = express();
 const port = 8081;
 
 // need some kind of basic key auth
+
+const pool = mariadb.createPool({
+    host: config.mariadb.host,
+    user: config.mariadb.user,
+    password: config.mariadb.password,
+    database: config.mariadb.database
+})
+
+const queryDatabase = async (query, params = []) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(query, params);
+        return rows;
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+};
 
 app.get('/', (req, res) => {
     res.json({
@@ -10,18 +32,29 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/urls', (req, res) => {
+app.get('/urls', async (req, res) => {
     // Get all URLS from the database
-    res.json({
-        message: 'urls'
-    });
+    let query = 'SELECT * FROM urls';
+    try {
+        const data = await queryDatabase(query);
+        res.json(data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 app.use(express.json());
-app.post('/add/url', (req, res)  => {
+app.post('/add/url', async (req, res)  => {
     // Add a new URL to the database for monitoring
-    const newURL = req.body;
-    res.status(201).json(newURL);
+    const newURL = req.body.url;
+    try {
+        const data = await queryDatabase('INSERT INTO urls (url) VALUES (?)', [newURL]);
+        res.status(201).json({'message': 'URL added'});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 app.use(express.json());

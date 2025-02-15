@@ -21,7 +21,7 @@ npm install
 
 Copy .env.sample to .env:
 
-```
+```bash
 cp .env.sample .env
 ```
 
@@ -40,7 +40,7 @@ Open config.json and edit the configuration settings accordingly. An example con
 
 First, bring up the Docker containers:
 
-```
+```bash
 docker-compose up -d
 ```
 
@@ -48,6 +48,46 @@ Then start the uptime monitor:
 
 ```bash
 npm run start-monitor
+```
+
+In another terminal, start the API:
+
+```bash
+npm run start-api
+```
+
+## API Documentation
+
+The API provides a way to manage URLs in the MariaDB database.
+
+### GET /urls
+
+Get all URLs in the database.
+
+Example request:
+```bash
+curl -X GET http://127.0.0.1:8081/urls
+```
+
+Example response:
+```json
+[{"id":1,"url":"https://www.example1.com","ack":0,"created_at":"2025-02-15T23:33:44.000Z"},{"id":2,"url":"https://www.example2.com","ack":0,"created_at":"2025-02-15T23:34:11.000Z"},{"id":3,"url":"https://www.example3.com","ack":0,"created_at":"2025-02-15T23:34:24.000Z"}]
+```
+
+### POST /add/url
+
+Add a new URL.
+
+Example request:
+```bash
+curl -X POST http://127.0.0.1:8081/add/url \
+     -H "Content-Type: application/json" \
+     -d '{"url": "https://www.example4.com"}'
+```
+
+Example response:
+```json
+{"message":"URL added"}
 ```
 
 ## Troubleshooting
@@ -58,7 +98,7 @@ Helpful commands for troubleshooting.
 
 Access ClickHouse in the Docker container:
 
-```
+```bash
 docker exec -it uptime_monitor_clickhouse bash
 clickhouse-client
 ```
