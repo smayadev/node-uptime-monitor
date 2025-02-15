@@ -31,7 +31,7 @@ Open config.json and edit the configuration settings accordingly. An example con
 
 ### Configuration Options
 
-- `checkInterval`: amount of time in milliseconds to wait between checks
+- `checkInterval`: amount of time in milliseconds to wait between checks, recommended 60000 ms or higher
 - `urls`: location of a text file containing urls to check
 - `timeout`: amount of time in seconds to wait for a URL to respond
 - `clickhouse`: configuration values for the ClickHouse database and table
