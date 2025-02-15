@@ -65,6 +65,5 @@ clickhouse-client
 
 ## Roadmap
 
-- Validate URLs
 - Retrieve URLs from MySQL or Postgres instead of a text file
 - Dockerize node app
