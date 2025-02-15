@@ -1,31 +1,11 @@
 const express = require('express');
-const mariadb = require('mariadb');
 const isUrlHttp = require('is-url-http');
 const config = require('./config.json');
+const { queryMariaDBDatabase } = require('./common');
 const app = express();
 const port = config.api_port;
 
 // need some kind of basic key auth
-
-const pool = mariadb.createPool({
-    host: config.mariadb.host,
-    user: config.mariadb.user,
-    password: config.mariadb.password,
-    database: config.mariadb.database
-})
-
-const queryDatabase = async (query, params = []) => {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        const rows = await conn.query(query, params);
-        return rows;
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) conn.release();
-    }
-};
 
 app.get('/', (req, res) => {
     return res.json({
@@ -37,7 +17,7 @@ app.get('/api/urls', async (req, res) => {
     // Get all URLS from the database
     let query = 'SELECT * FROM urls';
     try {
-        const data = await queryDatabase(query);
+        const data = await queryMariaDBDatabase(query);
         return res.json(data);
     } catch (err) {
         console.error(err);
@@ -53,7 +33,7 @@ app.post('/api/add/url', async (req, res)  => {
         return res.status(400).json({ message: 'Invalid URL' });
     }
     try {
-        const data = await queryDatabase('INSERT INTO urls (url) VALUES (?)', [newURL]);
+        const data = await queryMariaDBDatabase('INSERT INTO urls (url) VALUES (?)', [newURL]);
         return res.status(201).json({message: 'URL added'});
     } catch (err) {
         console.error(err);
@@ -69,7 +49,7 @@ app.post('/api/delete/url', async (req, res)  => {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
-        const data = await queryDatabase('DELETE FROM urls WHERE id = ?', [urlID]);
+        const data = await queryMariaDBDatabase('DELETE FROM urls WHERE id = ?', [urlID]);
         return res.status(201).json({message: 'URL deleted'});
     } catch (err) {
         console.error(err);
@@ -85,7 +65,7 @@ app.post('/api/ack/url', async (req, res)  => {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
-        const data = await queryDatabase('UPDATE urls SET ack = 1 WHERE id = ?', [urlID]);
+        const data = await queryMariaDBDatabase('UPDATE urls SET ack = 1 WHERE id = ?', [urlID]);
         return res.status(201).json({message: "URL ack'd"});
     } catch (err) {
         console.error(err);
@@ -101,7 +81,7 @@ app.post('/api/unack/url', async (req, res)  => {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
-        const data = await queryDatabase('UPDATE urls SET ack = 0 WHERE id = ?', [urlID]);
+        const data = await queryMariaDBDatabase('UPDATE urls SET ack = 0 WHERE id = ?', [urlID]);
         return res.status(201).json({message: "URL unack'd"});
     } catch (err) {
         console.error(err);
