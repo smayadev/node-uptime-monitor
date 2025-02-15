@@ -159,8 +159,6 @@ clickhouse-client
 
 ## Roadmap
 
-- Retrieve URLs from MySQL or Postgres instead of a text file
-  - have a way to ack a url so it doesn't get checked?
-  - express api for managing database entries
+- API key for API requests
 - Dockerize node app
 - Grafana
