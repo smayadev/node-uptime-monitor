@@ -20,9 +20,9 @@ async function fetchURLs() {
     results.forEach((result, index) => {
         console.log(`Processing URL ${index + 1}:`, urls[index]);
         if (result.status === "fulfilled") {
-            console.log(`${index + 1} Success:`, result.value.config.url, result.value.statusText, result.value.status);
+            console.log(`${index + 1} Success:`, urls[index], result.value.statusText, result.value.status);
         } else {
-            console.error(`${index + 1} Failed:`, result.reason.config.url, result.reason.code, result.reason.status);
+            console.error(`${index + 1} Failed:`, urls[index], result.reason.code, result.reason.status);
         }
     });
 
