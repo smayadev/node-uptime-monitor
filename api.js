@@ -27,8 +27,12 @@ const queryDatabase = async (query, params = []) => {
     }
 };
 
+const validateID = (id) => {
+    return Number.isInteger(id);
+};
+
 app.get('/', (req, res) => {
-    res.json({
+    return res.json({
         message: 'Hello World!'
     });
 });
@@ -38,10 +42,10 @@ app.get('/urls', async (req, res) => {
     let query = 'SELECT * FROM urls';
     try {
         const data = await queryDatabase(query);
-        res.json(data);
+        return res.json(data);
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 });
 
@@ -54,10 +58,10 @@ app.post('/add/url', async (req, res)  => {
     }
     try {
         const data = await queryDatabase('INSERT INTO urls (url) VALUES (?)', [newURL]);
-        res.status(201).json({message: 'URL added'});
+        return res.status(201).json({message: 'URL added'});
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 });
 
@@ -65,30 +69,30 @@ app.use(express.json());
 app.post('/delete/url', async (req, res)  => {
     // Delete a URL from the database
     const urlID = req.body.id;
-    if (!Number.isInteger(urlID)) {
+    if (!validateID(urlID)) {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
         const data = await queryDatabase('DELETE FROM urls WHERE id = ?', [urlID]);
-        res.status(201).json({message: 'URL deleted'});
+        return res.status(201).json({message: 'URL deleted'});
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 });
 
 app.use(express.json());
 app.post('/ack/url', (req, res)  => {
     // Ack a URL in the database (stop monitoring it)
-    const ackURL = req.body;
-    res.status(201).json(ackURL);
+    const ackURL = req.body.id;
+    return res.status(201).json(ackURL);
 });
 
 app.use(express.json());
 app.post('/unack/url', (req, res)  => {
     // Unack a URL in the database (begin monitoring again)
-    const unackURL = req.body;
-    res.status(201).json(unackURL);
+    const unackURL = req.body.id;
+    return res.status(201).json(unackURL);
 });
 
 app.listen(port, () => {
