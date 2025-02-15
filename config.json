@@ -1,5 +1,14 @@
 {
     "urls": "urls.txt",
     "checkInterval": 60000,
-    "timeout": 5000
+    "timeout": 5000,
+    "clickhouse": {
+        "host": "localhost",
+        "protocol": "http",
+        "port": 8123,
+        "user": "default",
+        "password": "test",
+        "database": "uptime_monitor",
+        "table": "uptime_data"
+    }
   }

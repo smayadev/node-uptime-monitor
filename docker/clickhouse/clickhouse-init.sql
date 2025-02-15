@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS uptime_monitor;
 
 CREATE TABLE IF NOT EXISTS uptime_monitor.uptime_data (
-    timestamp DateTime64(3),
+    timestamp DateTime,
     url String,
     status_code UInt32,
     status_text String
