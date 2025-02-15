@@ -47,7 +47,7 @@ docker-compose up -d
 Then start the uptime monitor:
 
 ```bash
-npm start
+npm run start-monitor
 ```
 
 ## Troubleshooting
