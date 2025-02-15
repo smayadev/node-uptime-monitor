@@ -64,6 +64,12 @@ const fetchURLs = async () => {
     var urls = await queryMariaDBDatabase('SELECT url FROM urls');
     urls = urls.map(row => row.url).filter(url => isUrlHttp(url));
 
+    if (urls.length === 0) {
+        console.log("No URLs found in the database. Retrying after delay...");
+        await delay(checkInterval);
+        return process.nextTick(fetchURLs);
+    }
+
     var apiRequests = urls.map(url => axios.get(url, { timeout: config.timeout }));
 
     var results = await Promise.allSettled(apiRequests);
