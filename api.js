@@ -82,17 +82,35 @@ app.post('/delete/url', async (req, res)  => {
 });
 
 app.use(express.json());
-app.post('/ack/url', (req, res)  => {
+app.post('/ack/url', async (req, res)  => {
     // Ack a URL in the database (stop monitoring it)
-    const ackURL = req.body.id;
-    return res.status(201).json(ackURL);
+    const urlID = req.body.id;
+    if (!validateID(urlID)) {
+        return res.status(400).json({ message: 'Invalid ID' });
+    }
+    try {
+        const data = await queryDatabase('UPDATE urls SET ack = 1 WHERE id = ?', [urlID]);
+        return res.status(201).json({message: "URL ack'd"});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Server error');
+    }
 });
 
 app.use(express.json());
-app.post('/unack/url', (req, res)  => {
+app.post('/unack/url', async (req, res)  => {
     // Unack a URL in the database (begin monitoring again)
-    const unackURL = req.body.id;
-    return res.status(201).json(unackURL);
+    const urlID = req.body.id;
+    if (!validateID(urlID)) {
+        return res.status(400).json({ message: 'Invalid ID' });
+    }
+    try {
+        const data = await queryDatabase('UPDATE urls SET ack = 0 WHERE id = ?', [urlID]);
+        return res.status(201).json({message: "URL unack'd"});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Server error');
+    }
 });
 
 app.listen(port, () => {

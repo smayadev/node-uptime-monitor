@@ -108,6 +108,38 @@ Example response:
 {"message":"URL deleted"}
 ```
 
+### POST /ack/url
+
+Ack a URL (stop monitoring it).
+
+Example request:
+```bash
+curl -X POST http://127.0.0.1:8081/ack/url \
+     -H "Content-Type: application/json" \
+     -d '{"id": 2}'
+```
+
+Example response:
+```json
+{"message":"URL ack'd"}
+```
+
+### POST /unack/url
+
+Unack a URL (begin monitoring again).
+
+Example request:
+```bash
+curl -X POST http://127.0.0.1:8081/unack/url \
+     -H "Content-Type: application/json" \
+     -d '{"id": 2}'
+```
+
+Example response:
+```json
+{"message":"URL unack'd"}
+```
+
 ## Troubleshooting
 
 Helpful commands for troubleshooting.
