@@ -27,10 +27,6 @@ const queryDatabase = async (query, params = []) => {
     }
 };
 
-const validateID = (id) => {
-    return Number.isInteger(id);
-};
-
 app.get('/', (req, res) => {
     return res.json({
         message: 'Hello World!'
@@ -69,7 +65,7 @@ app.use(express.json());
 app.post('/delete/url', async (req, res)  => {
     // Delete a URL from the database
     const urlID = req.body.id;
-    if (!validateID(urlID)) {
+    if (!Number.isInteger(urlID)) {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
@@ -85,7 +81,7 @@ app.use(express.json());
 app.post('/ack/url', async (req, res)  => {
     // Ack a URL in the database (stop monitoring it)
     const urlID = req.body.id;
-    if (!validateID(urlID)) {
+    if (!Number.isInteger(urlID)) {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
@@ -101,7 +97,7 @@ app.use(express.json());
 app.post('/unack/url', async (req, res)  => {
     // Unack a URL in the database (begin monitoring again)
     const urlID = req.body.id;
-    if (!validateID(urlID)) {
+    if (!Number.isInteger(urlID)) {
         return res.status(400).json({ message: 'Invalid ID' });
     }
     try {
