@@ -10,5 +10,11 @@
         "password": "test",
         "database": "uptime_monitor",
         "table": "uptime_data"
+    },
+    "mariadb": {
+        "host": "localhost",
+        "user": "user",
+        "password": "password",
+        "database": "uptime_monitor"
     }
   }

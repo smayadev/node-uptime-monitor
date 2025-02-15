@@ -2,6 +2,20 @@ version: "3.8"
 
 services:
 
+  mariadb:
+    image: mariadb:latest
+    container_name: uptime_monitor_mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./docker/mariadb/mariadb-init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - monitor-network
+
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: uptime_monitor_clickhouse
@@ -19,6 +33,7 @@ services:
 
 volumes:
   clickhouse_data:
+  mariadb_data:
 
 networks:
   monitor-network:
