@@ -4,7 +4,9 @@ This is my first project using node.js and express.js, how am I doing?
 
 ## Description
 
-Uptime Monitor is a tool designed to monitor the availability URLs. It periodically checks the status of specified URLs from a text file and saves the data to ClickHouse.
+Uptime Monitor is a tool designed to monitor the availability URLs. It periodically checks the status of specified URLs from a MariaDB table and saves the data to ClickHouse.
+
+URLs to check are stored in a MariaDB table which can be managed using the included API.
 
 ## Features
 
