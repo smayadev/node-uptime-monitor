@@ -10,7 +10,8 @@ var urls = fs.readFileSync(config.urls).toString().split("\n");
 
 async function fetchURLs() {
 
-    console.log("Current Date and Time:", new Date().toLocaleString());
+    const currentTimestamp = new Date().toISOString().replace('T', ' ').replace('Z', '');
+    console.log("Current Timestamp:", currentTimestamp);
     console.log("Getting URL data...");
 
     var apiRequests = urls.map(url => axios.get(url, { timeout: config.timeout }));
