@@ -1,4 +1,5 @@
 const { createClient } = require('@clickhouse/client');
+import isUrlHttp from 'is-url-http';
 
 var axios = require('axios');
 var fs = require('fs');
@@ -7,8 +8,6 @@ const config = require('./config.json');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const checkInterval = config.checkInterval;
-
-var urls = fs.readFileSync(config.urls).toString().split("\n");
 
 const initClickHouseClient = async () => {
 
@@ -44,6 +43,8 @@ const fetchURLs = async () => {
     const currentTimestamp = new Date().toISOString().replace('T', ' ').replace('Z', '').split('.')[0];
     console.log("Current Timestamp:", currentTimestamp);
     console.log("Getting URL data...");
+
+    var urls = fs.readFileSync(config.urls).toString().split("\n");
 
     var apiRequests = urls.map(url => axios.get(url, { timeout: config.timeout }));
 
