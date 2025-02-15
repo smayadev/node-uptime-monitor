@@ -1,5 +1,6 @@
 const express = require('express');
 const mariadb = require('mariadb');
+const isUrlHttp = require('is-url-http');
 const config = require('./config.json');
 const app = express();
 const port = 8081;
@@ -48,9 +49,12 @@ app.use(express.json());
 app.post('/add/url', async (req, res)  => {
     // Add a new URL to the database for monitoring
     const newURL = req.body.url;
+    if (!isUrlHttp(newURL)) {
+        return res.status(400).json({ message: 'Invalid URL' });
+    }
     try {
         const data = await queryDatabase('INSERT INTO urls (url) VALUES (?)', [newURL]);
-        res.status(201).json({'message': 'URL added'});
+        res.status(201).json({message: 'URL added'});
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -58,10 +62,19 @@ app.post('/add/url', async (req, res)  => {
 });
 
 app.use(express.json());
-app.post('/delete/url', (req, res)  => {
+app.post('/delete/url', async (req, res)  => {
     // Delete a URL from the database
-    const deleteURL = req.body;
-    res.status(201).json(deleteURL);
+    const urlID = req.body.id;
+    if (!Number.isInteger(urlID)) {
+        return res.status(400).json({ message: 'Invalid ID' });
+    }
+    try {
+        const data = await queryDatabase('DELETE FROM urls WHERE id = ?', [urlID]);
+        res.status(201).json({message: 'URL deleted'});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 app.use(express.json());

@@ -90,6 +90,22 @@ Example response:
 {"message":"URL added"}
 ```
 
+### POST /delete/url
+
+Delete a URL.
+
+Example request:
+```bash
+curl -X POST http://127.0.0.1:8081/delete/url \
+     -H "Content-Type: application/json" \
+     -d '{"id": 2}'
+```
+
+Example response:
+```json
+{"message":"URL deleted"}
+```
+
 ## Troubleshooting
 
 Helpful commands for troubleshooting.
