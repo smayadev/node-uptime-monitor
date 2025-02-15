@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    restart: always
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./docker/clickhouse/clickhouse-init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
+    networks:
+      - monitor-network
+
+volumes:
+  clickhouse_data:
+
+networks:
+  monitor-network:
+    driver: bridge
