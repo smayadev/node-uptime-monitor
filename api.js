@@ -3,7 +3,7 @@ const mariadb = require('mariadb');
 const isUrlHttp = require('is-url-http');
 const config = require('./config.json');
 const app = express();
-const port = 8081;
+const port = config.api_port;
 
 // need some kind of basic key auth
 

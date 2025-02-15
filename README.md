@@ -36,7 +36,9 @@ Open config.json and edit the configuration settings accordingly. An example con
 - `checkInterval`: amount of time in milliseconds to wait between checks, recommended 60000 ms or higher
 - `urls`: location of a text file containing urls to check
 - `timeout`: amount of time in seconds to wait for a URL to respond
-- `clickhouse`: configuration values for the ClickHouse database and table
+- `api_port`: Port the API runs on
+- `clickhouse`: configuration values for the ClickHouse database and table (Note: see docker/clickhouse/clickhouse-init.sql if using the included docker-compose.yml and .env.sample)
+- `mariadb`: configuration values for the MariaDB database (Note: see docker/mariadb/mariadb-init.sql if using the included docker-compose.yml and .env.sample)
 
 ## Usage
 

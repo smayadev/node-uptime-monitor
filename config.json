@@ -2,6 +2,7 @@
     "urls": "urls.txt",
     "checkInterval": 60000,
     "timeout": 5000,
+    "api_port": 8081,
     "clickhouse": {
         "host": "localhost",
         "protocol": "http",
