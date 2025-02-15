@@ -1,13 +1,31 @@
 const { createClient } = require('@clickhouse/client');
 const isUrlHttp = require('is-url-http');
-
+const mariadb = require('mariadb');
 var axios = require('axios');
-var fs = require('fs');
-
 const config = require('./config.json');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const checkInterval = config.checkInterval;
+
+const pool = mariadb.createPool({
+    host: config.mariadb.host,
+    user: config.mariadb.user,
+    password: config.mariadb.password,
+    database: config.mariadb.database
+})
+
+const queryMariaDBDatabase = async (query, params = []) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(query, params);
+        return rows;
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+};
 
 const initClickHouseClient = async () => {
 
@@ -32,8 +50,7 @@ const initClickHouseClient = async () => {
 
     return client;
     
-  };
-  
+};  
 
 const fetchURLs = async () => {
 
@@ -44,7 +61,8 @@ const fetchURLs = async () => {
     console.log("Current Timestamp:", currentTimestamp);
     console.log("Getting URL data...");
 
-    var urls = fs.readFileSync(config.urls).toString().split("\n").filter(url => isUrlHttp(url));
+    var urls = await queryMariaDBDatabase('SELECT url FROM urls');
+    urls = urls.map(row => row.url).filter(url => isUrlHttp(url));
 
     var apiRequests = urls.map(url => axios.get(url, { timeout: config.timeout }));
 

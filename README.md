@@ -12,6 +12,7 @@ URLs to check are stored in a MariaDB table which can be managed using the inclu
 
 - Asynchronous monitoring of multiple URLs
 - Uptime data storage in ClickHouse for efficiency
+- URLs to monitor stored in MariaDB, can be controlled with built-in API -- integrate with external applications
 
 ## Installation
 
@@ -36,7 +37,6 @@ Open config.json and edit the configuration settings accordingly. An example con
 ### Configuration Options
 
 - `checkInterval`: amount of time in milliseconds to wait between checks, recommended 60000 ms or higher
-- `urls`: location of a text file containing urls to check
 - `timeout`: amount of time in seconds to wait for a URL to respond
 - `api_port`: Port the API runs on
 - `clickhouse`: configuration values for the ClickHouse database and table (Note: see docker/clickhouse/clickhouse-init.sql if using the included docker-compose.yml and .env.sample)
