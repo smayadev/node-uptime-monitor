@@ -66,13 +66,13 @@ npm run start-api
 
 The API provides a way to manage URLs in the MariaDB database.
 
-### GET /urls
+### GET /api/urls
 
 Get all URLs in the database.
 
 Example request:
 ```bash
-curl -X GET http://127.0.0.1:8081/urls
+curl -X GET http://127.0.0.1:8081/api/urls
 ```
 
 Example response:
@@ -80,13 +80,13 @@ Example response:
 [{"id":1,"url":"https://www.example1.com","ack":0,"created_at":"2025-02-15T23:33:44.000Z"},{"id":2,"url":"https://www.example2.com","ack":0,"created_at":"2025-02-15T23:34:11.000Z"},{"id":3,"url":"https://www.example3.com","ack":0,"created_at":"2025-02-15T23:34:24.000Z"}]
 ```
 
-### POST /add/url
+### POST /api/add/url
 
 Add a new URL.
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/add/url \
+curl -X POST http://127.0.0.1:8081/api/add/url \
      -H "Content-Type: application/json" \
      -d '{"url": "https://www.example4.com"}'
 ```
@@ -96,13 +96,13 @@ Example response:
 {"message":"URL added"}
 ```
 
-### POST /delete/url
+### POST /api/delete/url
 
 Delete a URL.
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/delete/url \
+curl -X POST http://127.0.0.1:8081/api/delete/url \
      -H "Content-Type: application/json" \
      -d '{"id": 2}'
 ```
@@ -112,13 +112,13 @@ Example response:
 {"message":"URL deleted"}
 ```
 
-### POST /ack/url
+### POST /api/ack/url
 
 Ack a URL (stop monitoring it).
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/ack/url \
+curl -X POST http://127.0.0.1:8081/api/ack/url \
      -H "Content-Type: application/json" \
      -d '{"id": 2}'
 ```
@@ -128,13 +128,13 @@ Example response:
 {"message":"URL ack'd"}
 ```
 
-### POST /unack/url
+### POST /api/unack/url
 
 Unack a URL (begin monitoring again).
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/unack/url \
+curl -X POST http://127.0.0.1:8081/api/unack/url \
      -H "Content-Type: application/json" \
      -d '{"id": 2}'
 ```

@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/urls', async (req, res) => {
+app.get('/api/urls', async (req, res) => {
     // Get all URLS from the database
     let query = 'SELECT * FROM urls';
     try {
@@ -46,7 +46,7 @@ app.get('/urls', async (req, res) => {
 });
 
 app.use(express.json());
-app.post('/add/url', async (req, res)  => {
+app.post('/api/add/url', async (req, res)  => {
     // Add a new URL to the database for monitoring
     const newURL = req.body.url;
     if (!isUrlHttp(newURL)) {
@@ -62,7 +62,7 @@ app.post('/add/url', async (req, res)  => {
 });
 
 app.use(express.json());
-app.post('/delete/url', async (req, res)  => {
+app.post('/api/delete/url', async (req, res)  => {
     // Delete a URL from the database
     const urlID = req.body.id;
     if (!Number.isInteger(urlID)) {
@@ -78,7 +78,7 @@ app.post('/delete/url', async (req, res)  => {
 });
 
 app.use(express.json());
-app.post('/ack/url', async (req, res)  => {
+app.post('/api/ack/url', async (req, res)  => {
     // Ack a URL in the database (stop monitoring it)
     const urlID = req.body.id;
     if (!Number.isInteger(urlID)) {
@@ -94,7 +94,7 @@ app.post('/ack/url', async (req, res)  => {
 });
 
 app.use(express.json());
-app.post('/unack/url', async (req, res)  => {
+app.post('/api/unack/url', async (req, res)  => {
     // Unack a URL in the database (begin monitoring again)
     const urlID = req.body.id;
     if (!Number.isInteger(urlID)) {
