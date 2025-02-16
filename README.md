@@ -162,4 +162,3 @@ clickhouse-client
 ## Roadmap
 
 - Dockerize node app
-- Grafana
