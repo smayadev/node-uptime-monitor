@@ -5,8 +5,6 @@ const { queryMariaDBDatabase } = require('./common');
 const app = express();
 const port = config.api_port;
 
-// need some kind of basic key auth
-
 app.get('/', (req, res) => {
     return res.json({
         message: 'Hello World!'

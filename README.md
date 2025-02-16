@@ -66,6 +66,8 @@ npm run start-api
 
 The API provides a way to manage URLs in the MariaDB database.
 
+There is no authentication system in place so an API gateway of some sort is needed.
+
 ### GET /api/urls
 
 Get all URLs in the database.
@@ -159,6 +161,5 @@ clickhouse-client
 
 ## Roadmap
 
-- API key for API requests
 - Dockerize node app
 - Grafana
