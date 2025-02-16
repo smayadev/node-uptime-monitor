@@ -12,6 +12,7 @@ URLs to check are stored in a MariaDB table which can be managed using the inclu
 
 - Asynchronous monitoring of multiple URLs
 - Uptime data storage in ClickHouse for efficiency
+- Prometheus endpoint for monitoring metrics (status code, status text, response time)
 - URLs to monitor stored in MariaDB, can be controlled with built-in API -- integrate with external applications
 
 ## Installation
@@ -39,6 +40,7 @@ Open config.json and edit the configuration settings accordingly. An example con
 - `checkInterval`: amount of time in milliseconds to wait between checks, recommended 60000 ms or higher
 - `timeout`: amount of time in seconds to wait for a URL to respond
 - `api_port`: Port the API runs on
+- `prometheus_port`: Port the Prometheus metrics endpoint runs on
 - `clickhouse`: configuration values for the ClickHouse database and table (Note: see docker/clickhouse/clickhouse-init.sql if using the included docker-compose.yml and .env.sample)
 - `mariadb`: configuration values for the MariaDB database (Note: see docker/mariadb/mariadb-init.sql if using the included docker-compose.yml and .env.sample)
 

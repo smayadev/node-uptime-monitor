@@ -2,6 +2,7 @@
     "checkInterval": 60000,
     "timeout": 5000,
     "api_port": 8081,
+    "prometheus_port": 9091,
     "clickhouse": {
         "host": "localhost",
         "protocol": "http",
