@@ -31,7 +31,7 @@ const requestDurationHistogram = new promClient.Histogram({
     name: 'http_request_duration_milliseconds',
     help: 'Request duration of monitored URLs',
     labelNames: ['url'],
-    buckets: [50, 100, 250, 500, 1000, 5000, 10000]
+    buckets: [0, 50, 100, 250, 500, 1000, 5000, 10000]
 });
 
 registry.registerMetric(httpResponseStatusCodeGauge);
@@ -86,7 +86,7 @@ const fetchURLs = async () => {
         try {
             requestDuration = result.value.requestDuration;
         } catch (error) {
-            requestDuration = null;
+            requestDuration = 0;
         }
 
         console.log(`Processing URL ${index + 1}:`, urls[index]);
@@ -103,10 +103,7 @@ const fetchURLs = async () => {
 
         httpResponseStatusCodeGauge.set({ url: url, status_code: statusCode }, statusCode);
         httpResponseStatusTextCounter.inc({ url: url, status_text: statusText });
-
-        if (requestDuration) {
-            requestDurationHistogram.observe({ url: url }, requestDuration);
-        }
+        requestDurationHistogram.observe({ url: url }, requestDuration);
 
         try {
             await client.insert({
@@ -115,7 +112,8 @@ const fetchURLs = async () => {
                     timestamp: currentTimestamp,
                     url: url,
                     status_code: statusCode,
-                    status_text: statusText
+                    status_text: statusText,
+                    request_duration: requestDuration
                 }],
                 format: 'JSONEachRow'
             });
