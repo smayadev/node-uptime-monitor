@@ -31,8 +31,9 @@ const pool = mariadb.createPool({
     host: config.mariadb.host,
     user: config.mariadb.user,
     password: config.mariadb.password,
-    database: config.mariadb.database
-})
+    database: config.mariadb.database,
+    connectTimeout: 10000
+});
 
 const queryMariaDBDatabase = async (query, params = []) => {
     let conn;

@@ -16,6 +16,7 @@
         "host": "localhost",
         "user": "user",
         "password": "password",
-        "database": "uptime_monitor"
+        "database": "uptime_monitor",
+        "timeout": 10000
     }
   }
