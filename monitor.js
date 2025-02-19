@@ -49,7 +49,15 @@ const fetchURLs = async () => {
     console.log("Current Timestamp:", currentTimestamp);
     console.log("Getting URL data...");
 
-    var urls = await queryMariaDBDatabase('SELECT url FROM urls');
+    try {
+        var urls = await queryMariaDBDatabase('SELECT url FROM urls');
+    }
+    catch (error) {
+        console.error("Error getting URLs from database", error);
+        await delay(checkInterval);
+        return process.nextTick(fetchURLs);
+    }
+    // var urls = await queryMariaDBDatabase('SELECT url FROM urls');
     urls = urls.map(row => row.url).filter(url => isUrlHttp(url));
 
     if (urls.length === 0) {
