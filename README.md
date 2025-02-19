@@ -31,7 +31,7 @@ Copy .env.sample to .env:
 cp .env.sample .env
 ```
 
-Open .env and edit the variables. These are used by Docker and any database variables should match what's set in config.json (see below).
+Open .env and edit the variables. These are used by Docker and any database variables should match what's set in config.json (see below). The variable names currently in .env.sample should not be renamed or removed and no new variables should be added (to run under a default configuration).
 
 Open config.json and edit the configuration settings accordingly. An example config.json has been provided in this project.
 
@@ -42,7 +42,19 @@ Open config.json and edit the configuration settings accordingly. An example con
 - `api_port`: Port the API runs on
 - `prometheus_port`: Port the Prometheus metrics endpoint runs on
 - `clickhouse`: configuration values for the ClickHouse database and table (Note: see docker/clickhouse/clickhouse-init.sql if using the included docker-compose.yml and .env.sample)
+  - `host`: Hostname of the instance running ClickHouse
+  - `protocol`: http or https (note: current default configuration is http, https may require additional settings and may be included in a future release)
+  - `port`: Port for accessing ClickHouse's http API
+  - `user`: User with access to the database
+  - `password`: Password of the user with access to the database
+  - `database`: Name of the database to query
+  - `table`: Name of the table to query
 - `mariadb`: configuration values for the MariaDB database (Note: see docker/mariadb/mariadb-init.sql if using the included docker-compose.yml and .env.sample)
+  - `timeout`: Timeout to establish connection to MariaDB, in milliseconds
+  - `database`: Name of the database to query
+  - `password`: Password of the user with access to the database
+  - `user`: User with access to the database
+  - `host`: Hostname of the instance running MariaDB
 
 ## Usage
 
