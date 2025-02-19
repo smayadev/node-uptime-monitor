@@ -57,7 +57,7 @@ const fetchURLs = async () => {
         await delay(checkInterval);
         return process.nextTick(fetchURLs);
     }
-    // var urls = await queryMariaDBDatabase('SELECT url FROM urls');
+
     urls = urls.map(row => row.url).filter(url => isUrlHttp(url));
 
     if (urls.length === 0) {
