@@ -70,12 +70,6 @@ Then start the uptime monitor:
 npm run start-monitor
 ```
 
-In another terminal, start the API:
-
-```bash
-npm run start-api
-```
-
 ## API Documentation
 
 The API provides a way to manage URLs in the MariaDB database.
