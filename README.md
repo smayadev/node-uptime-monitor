@@ -163,4 +163,4 @@ clickhouse-client
 
 ## Roadmap
 
-- Handle ClickHouse connection failure (timeout + don't exit script)
+- all done for now
