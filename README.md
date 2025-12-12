@@ -70,6 +70,14 @@ Then start the uptime monitor:
 npm run start-monitor
 ```
 
+## Prometheus Metrics Documentation
+
+The Prometheus metrics endpoint can be accessed using the endpoint URL:
+
+```bash
+http://127.0.0.1:9091/metrics
+```
+
 ## API Documentation
 
 The API provides a way to manage URLs in the MariaDB database.
