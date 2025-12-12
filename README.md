@@ -171,5 +171,4 @@ clickhouse-client
 
 ## Roadmap
 
-- Dockerize node app
 - Handle ClickHouse connection failure (timeout + don't exit script)
