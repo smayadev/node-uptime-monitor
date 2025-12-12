@@ -15,14 +15,6 @@ URLs to check are stored in a MariaDB table which can be managed using the inclu
 - Prometheus endpoint for monitoring metrics (status code, status text, response time)
 - URLs to monitor stored in MariaDB, can be controlled with built-in API -- integrate with external applications
 
-## Installation
-
-To install the dependencies, run:
-
-```bash
-npm install
-```
-
 ## Configuration
 
 Copy .env.sample to .env:
