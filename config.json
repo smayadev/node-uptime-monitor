@@ -13,7 +13,7 @@
         "table": "uptime_data"
     },
     "mariadb": {
-        "host": "localhost",
+        "host": "mariadb",
         "user": "user",
         "password": "password",
         "database": "uptime_monitor",

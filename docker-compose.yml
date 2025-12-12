@@ -31,6 +31,20 @@ services:
     networks:
       - monitor-network
 
+  node-monitor-api:
+    build:
+      context: .
+      dockerfile: docker/APIDockerfile
+    image: node-monitor-api:latest
+    ports:
+      - "8081:8081"
+    restart: always
+    depends_on:
+      - mariadb
+      - clickhouse
+    networks:
+      - monitor-network
+
 volumes:
   clickhouse_data:
   mariadb_data:
