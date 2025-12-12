@@ -1,0 +1,22 @@
+# Use an official Node.js runtime as a parent image
+FROM node:20-alpine
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json (if available) to the working directory
+COPY package*.json ./
+
+# Install any dependencies
+RUN npm install --production
+
+# Copy the rest of the application code to the container
+COPY monitor.js .
+COPY common.js .
+COPY config.json .
+
+# Make port 9091 available to the world outside this container
+EXPOSE 9091
+
+# Define the command to run your app
+CMD ["npm", "run", "start-monitor"]

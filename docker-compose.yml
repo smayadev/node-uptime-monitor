@@ -45,6 +45,20 @@ services:
     networks:
       - monitor-network
 
+  node-monitor:
+    build:
+      context: .
+      dockerfile: docker/MonitorDockerfile
+    image: node-monitor:latest
+    ports:
+      - "9091:9091"
+    restart: always
+    depends_on:
+      - mariadb
+      - clickhouse
+    networks:
+      - monitor-network
+
 volumes:
   clickhouse_data:
   mariadb_data:

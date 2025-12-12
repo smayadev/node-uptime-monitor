@@ -64,12 +64,6 @@ First, bring up the Docker containers:
 docker-compose up -d
 ```
 
-Then start the uptime monitor:
-
-```bash
-npm run start-monitor
-```
-
 ## Prometheus Metrics Documentation
 
 The Prometheus metrics endpoint can be accessed using the endpoint URL:

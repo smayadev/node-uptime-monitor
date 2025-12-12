@@ -4,7 +4,7 @@
     "api_port": 8081,
     "prometheus_port": 9091,
     "clickhouse": {
-        "host": "localhost",
+        "host": "clickhouse",
         "protocol": "http",
         "port": 8123,
         "user": "default",
