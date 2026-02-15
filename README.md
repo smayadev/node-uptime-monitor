@@ -56,6 +56,16 @@ First, bring up the Docker containers:
 docker-compose up -d
 ```
 
+That's it!
+
+## Tests
+
+Run tests with the following command if needed:
+
+```
+docker compose run --rm node-test 2>&1
+```
+
 ## Prometheus Metrics Documentation
 
 The Prometheus metrics endpoint can be accessed using the endpoint URL:

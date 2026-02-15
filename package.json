@@ -4,13 +4,17 @@
   "description": "",
   "main": "async-demo.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start-monitor": "node monitor.js",
     "start-api": "node api.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
   "dependencies": {
     "@clickhouse/client": "^1.10.1",
     "axios": "^1.12.2",

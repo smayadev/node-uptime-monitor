@@ -59,6 +59,14 @@ services:
     networks:
       - monitor-network
 
+  node-test:
+    build:
+      context: .
+      dockerfile: docker/TestDockerfile
+    image: node-test:latest
+    profiles:
+      - test
+
 volumes:
   clickhouse_data:
   mariadb_data:
