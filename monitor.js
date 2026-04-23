@@ -1,4 +1,3 @@
-const isUrlHttp = require('is-url-http');
 var axios = require('axios');
 const express = require('express');
 const promClient = require('prom-client');
@@ -58,7 +57,14 @@ const fetchURLs = async () => {
         return process.nextTick(fetchURLs);
     }
 
-    urls = urls.map(row => row.url).filter(url => isUrlHttp(url));
+    urls = urls.map(row => row.url).filter(url => {
+        try {
+            const parsed = new URL(url);
+            return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+        } catch {
+            return false;
+        }
+    });
 
     if (urls.length === 0) {
         console.log("No URLs found in the database. Retrying after delay...");
