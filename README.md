@@ -73,6 +73,7 @@ GitHub Actions runs a CI workflow on every push to `main` and on every pull requ
 - CodeQL static analysis for JavaScript
 - Gitleaks scan for committed secrets
 - Snyk open source and Snyk Code scans at high severity or above
+- Trivy container scans of the API and monitor images at high severity or above
 
 Dependency and tooling updates are handled by Dependabot, which opens pull requests on a weekly schedule:
 

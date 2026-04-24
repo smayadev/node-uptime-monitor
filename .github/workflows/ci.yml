@@ -62,6 +62,40 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  trivy:
+    name: Trivy (${{ matrix.image.name }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: api
+            dockerfile: docker/APIDockerfile
+          - name: monitor
+            dockerfile: docker/MonitorDockerfile
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Build image
+        run: docker build -f ${{ matrix.image.dockerfile }} -t ${{ matrix.image.name }}:ci .
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4
+        with:
+          image-ref: ${{ matrix.image.name }}:ci
+          format: sarif
+          output: trivy-${{ matrix.image.name }}.sarif
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@65216971a11ded447a6b76263d5a144519e5eee1
+        with:
+          sarif_file: trivy-${{ matrix.image.name }}.sarif
+          category: trivy-${{ matrix.image.name }}
+
   snyk:
     name: Snyk
     runs-on: ubuntu-latest
