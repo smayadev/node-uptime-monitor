@@ -1,9 +1,17 @@
 const express = require('express');
-const isUrlHttp = require('is-url-http');
 const config = require('./config.json');
 const { queryMariaDBDatabase } = require('./common');
 const app = express();
 const port = config.api_port;
+
+const isUrlHttp = (url) => {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+};
 
 app.get('/', (req, res) => {
     return res.json({
