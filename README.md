@@ -64,6 +64,21 @@ Run tests with the following command if needed:
 docker compose run --rm node-test 2>&1
 ```
 
+## Automated Testing and Security
+
+GitHub Actions runs a CI workflow on every push to `main` and on every pull request. The workflow only runs tests and security checks but does not deploy anything.
+
+- Jest test suite on Node.js 20 and 22
+- `npm audit` at high severity or above
+- CodeQL static analysis for JavaScript
+- Gitleaks scan for committed secrets
+- Snyk open source and Snyk Code scans at high severity or above
+
+Dependency and tooling updates are handled by Dependabot, which opens pull requests on a weekly schedule:
+
+- npm dependencies (development and production dependencies grouped separately; production updates limited to minor and patch so major bumps land as individual pull requests)
+- GitHub Actions version bumps
+
 ## Prometheus Metrics Documentation
 
 The Prometheus metrics endpoint can be accessed using the endpoint URL:
