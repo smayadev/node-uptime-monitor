@@ -94,7 +94,7 @@ jobs:
               --exit-code 1 \
               ${{ matrix.image.name }}:ci
       - name: Upload SARIF to GitHub Security
-        if: ${{ hashFiles(format('trivy-{0}.sarif', matrix.image.name)) != '' }}
+        if: ${{ always() && hashFiles(format('trivy-{0}.sarif', matrix.image.name)) != '' }}
         uses: github/codeql-action/upload-sarif@65216971a11ded447a6b76263d5a144519e5eee1
         with:
           sarif_file: trivy-${{ matrix.image.name }}.sarif
