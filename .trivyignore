@@ -1,0 +1,9 @@
+# Vulnerabilities in @xmldom/xmldom bundled with the npm CLI shipped inside
+# the Chainguard node base image at /usr/lib/node_modules/npm/node_modules/.
+# The runtime container's CMD invokes node directly (e.g. `node api.js`); npm
+# is never executed in the running container, so this code path is unreachable
+# in production. Will remove these once Node.js bumps its bundled npm version.
+CVE-2026-41672
+CVE-2026-41673
+CVE-2026-41674
+CVE-2026-41675
