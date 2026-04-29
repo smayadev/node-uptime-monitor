@@ -178,7 +178,8 @@ fetchURLs();
 
 // Express server for Prometheus metrics
 const app = express();
-const port = config.prometheus_port || 9091;
+const port = config.prometheus_port;
+const host = config.prometheus_host.replace(/\/+$/, ''); // Remove trailing slashes
 
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', registry.contentType);
@@ -186,6 +187,6 @@ app.get('/metrics', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Prometheus metrics available at http://127.0.0.1:${port}/metrics`);
+    console.log(`Prometheus metrics available at ${host}:${port}/metrics`);
 });
 
