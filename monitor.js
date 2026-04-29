@@ -1,4 +1,4 @@
-var axios = require('axios');
+const axios = require('axios');
 const express = require('express');
 const promClient = require('prom-client');
 const config = require('./config');
@@ -73,8 +73,9 @@ const fetchURLs = async () => {
     console.log("Current Timestamp:", currentTimestamp);
     console.log("Getting URL data...");
 
+    let urls;
     try {
-        var urls = await queryMariaDBDatabase('SELECT url FROM urls');
+        urls = await queryMariaDBDatabase('SELECT url FROM urls');
     }
     catch (error) {
         console.error("Error getting URLs from database", error);
@@ -113,9 +114,9 @@ const fetchURLs = async () => {
         return response
     })
 
-    var apiRequests = urls.map(url => instance.get(url, { timeout: config.timeout }));
+    const apiRequests = urls.map(url => instance.get(url, { timeout: config.timeout }));
 
-    var results = await Promise.allSettled(apiRequests);
+    const results = await Promise.allSettled(apiRequests);
 
     for (const [index, result] of results.entries()) {
 

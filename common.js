@@ -4,9 +4,9 @@ const config = require('./config');
 
 const initClickHouseClient = async () => {
 
-    var host = config.clickhouse.host;
-    var protocol = config.clickhouse.protocol;
-    var port = config.clickhouse.port;
+    const host = config.clickhouse.host;
+    const protocol = config.clickhouse.protocol;
+    const port = config.clickhouse.port;
 
     const client = createClient({
       url: `${protocol}://${host}:${port}`,
