@@ -51,7 +51,8 @@ MariaDB (see also `docker/mariadb/mariadb-init.sql`):
 - `REQUEST_TIMEOUT_MS` - per-URL HTTP request timeout (default: `5000`)
 - `API_PORT` - port the API listens on (default: `8081`)
 - `PROMETHEUS_PORT` - port the Prometheus metrics endpoint listens on (default: `9091`)
-- `PROMETHEUS_HOST` - host the Prometheus metrics endpoint binds to (default: `http://127.0.0.1`)
+- `PROMETHEUS_HOST` - interface the Prometheus metrics server binds to (default: `127.0.0.1`; set to `0.0.0.0` to expose on all interfaces)
+- `PROMETHEUS_PROTOCOL` - protocol shown in the startup log line for the metrics URL (default: `http`)
 - `MARIADB_CONNECT_TIMEOUT_MS` - MariaDB connection timeout (default: `10000`)
 
 ## Usage

@@ -9,7 +9,8 @@ module.exports = {
     timeout: num(env.REQUEST_TIMEOUT_MS, 5000),
     api_port: num(env.API_PORT, 8081),
     prometheus_port: num(env.PROMETHEUS_PORT, 9091),
-    prometheus_host: env.PROMETHEUS_HOST || 'http://127.0.0.1',
+    prometheus_host: env.PROMETHEUS_HOST || '127.0.0.1',
+    prometheus_protocol: env.PROMETHEUS_PROTOCOL || 'http',
     clickhouse: {
         host: env.CLICKHOUSE_HOST || 'clickhouse',
         protocol: env.CLICKHOUSE_INTERFACE || 'http',

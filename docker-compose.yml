@@ -53,7 +53,7 @@ services:
       dockerfile: docker/MonitorDockerfile
     image: node-monitor:latest
     ports:
-      - "9091:9091"
+      - "127.0.0.1:9091:9091"
     restart: always
     env_file:
       - .env

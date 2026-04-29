@@ -179,14 +179,15 @@ fetchURLs();
 // Express server for Prometheus metrics
 const app = express();
 const port = config.prometheus_port;
-const host = config.prometheus_host.replace(/\/+$/, ''); // Remove trailing slashes
+const host = config.prometheus_host;
+const protocol = config.prometheus_protocol;
 
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', registry.contentType);
     res.send(await registry.metrics());
 });
 
-app.listen(port, () => {
-    console.log(`Prometheus metrics available at ${host}:${port}/metrics`);
+app.listen(port, host, () => {
+    console.log(`Prometheus metrics available at ${protocol}://${host}:${port}/metrics`);
 });
 
