@@ -37,13 +37,16 @@ registry.registerMetric(httpResponseStatusCodeGauge);
 registry.registerMetric(httpResponsesTotalCounter);
 registry.registerMetric(requestDurationHistogram);
 
-const STATUS_CLASSES = ['2xx', '3xx', '4xx', '5xx', 'error'];
+const statusClassMap = {
+    '2xx': (c) => c >= 200 && c < 300,
+    '3xx': (c) => c >= 300 && c < 400,
+    '4xx': (c) => c >= 400 && c < 500,
+    '5xx': (c) => c >= 500,
+    'error': () => true,
+};
 
 const statusClass = (code) =>
-    code >= 200 && code < 300 ? '2xx' :
-    code >= 300 && code < 400 ? '3xx' :
-    code >= 400 && code < 500 ? '4xx' :
-    code >= 500 ? '5xx' : 'error';
+    Object.keys(statusClassMap).find((cls) => statusClassMap[cls](code));
 
 let trackedUrls = new Set();
 
@@ -52,7 +55,7 @@ const dropStaleSeries = (currentUrls) => {
         if (currentUrls.has(stale)) continue;
         httpResponseStatusCodeGauge.remove(stale);
         requestDurationHistogram.remove(stale);
-        for (const cls of STATUS_CLASSES) {
+        for (const cls of Object.keys(statusClassMap)) {
             httpResponsesTotalCounter.remove(stale, cls);
         }
     }
