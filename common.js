@@ -1,6 +1,6 @@
 const { createClient } = require('@clickhouse/client');
 const mariadb = require('mariadb');
-const config = require('./config.json');
+const config = require('./config');
 
 const initClickHouseClient = async () => {
 

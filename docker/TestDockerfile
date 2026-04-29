@@ -8,7 +8,7 @@ RUN npm install
 
 COPY api.js .
 COPY common.js .
-COPY config.json .
+COPY config.js .
 COPY tests/ tests/
 
 CMD ["npm", "test"]

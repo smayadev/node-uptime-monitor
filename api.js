@@ -1,5 +1,5 @@
 const express = require('express');
-const config = require('./config.json');
+const config = require('./config');
 const { queryMariaDBDatabase } = require('./common');
 const app = express();
 const port = config.api_port;

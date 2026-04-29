@@ -1,7 +1,7 @@
 var axios = require('axios');
 const express = require('express');
 const promClient = require('prom-client');
-const config = require('./config.json');
+const config = require('./config');
 const { initClickHouseClient, queryMariaDBDatabase } = require('./common');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
