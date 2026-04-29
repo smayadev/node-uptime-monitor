@@ -16,26 +16,48 @@ const registry = new promClient.Registry();
 
 const httpResponseStatusCodeGauge = new promClient.Gauge({
     name: 'http_response_status_code',
-    help: 'HTTP response status code',
-    labelNames: ['url', 'status_code']
+    help: 'Latest HTTP response status code observed for the URL (0 on error)',
+    labelNames: ['url']
 });
 
-const httpResponseStatusTextCounter = new promClient.Counter({
-    name: 'http_response_status_text',
-    help: 'HTTP response status text',
-    labelNames: ['url', 'status_text']
+const httpResponsesTotalCounter = new promClient.Counter({
+    name: 'http_responses_total',
+    help: 'Count of HTTP responses bucketed by status class (2xx/3xx/4xx/5xx/error)',
+    labelNames: ['url', 'status_class']
 });
 
 const requestDurationHistogram = new promClient.Histogram({
     name: 'http_request_duration_milliseconds',
     help: 'Request duration of monitored URLs',
     labelNames: ['url'],
-    buckets: [0, 50, 100, 250, 500, 1000, 5000, 10000]
+    buckets: [50, 100, 250, 500, 1000, 5000, 10000]
 });
 
 registry.registerMetric(httpResponseStatusCodeGauge);
-registry.registerMetric(httpResponseStatusTextCounter);
+registry.registerMetric(httpResponsesTotalCounter);
 registry.registerMetric(requestDurationHistogram);
+
+const STATUS_CLASSES = ['2xx', '3xx', '4xx', '5xx', 'error'];
+
+const statusClass = (code) =>
+    code >= 200 && code < 300 ? '2xx' :
+    code >= 300 && code < 400 ? '3xx' :
+    code >= 400 && code < 500 ? '4xx' :
+    code >= 500 ? '5xx' : 'error';
+
+let trackedUrls = new Set();
+
+const dropStaleSeries = (currentUrls) => {
+    for (const stale of trackedUrls) {
+        if (currentUrls.has(stale)) continue;
+        httpResponseStatusCodeGauge.remove(stale);
+        requestDurationHistogram.remove(stale);
+        for (const cls of STATUS_CLASSES) {
+            httpResponsesTotalCounter.remove(stale, cls);
+        }
+    }
+    trackedUrls = currentUrls;
+};
 
 // Primary function
 const fetchURLs = async () => {
@@ -65,6 +87,8 @@ const fetchURLs = async () => {
             return false;
         }
     });
+
+    dropStaleSeries(new Set(urls));
 
     if (urls.length === 0) {
         console.log("No URLs found in the database. Retrying after delay...");
@@ -115,9 +139,9 @@ const fetchURLs = async () => {
             console.error(`${index + 1} Failed:`, url, statusText, statusCode);
         }
 
-        httpResponseStatusCodeGauge.set({ url: url, status_code: statusCode }, statusCode);
-        httpResponseStatusTextCounter.inc({ url: url, status_text: statusText });
-        requestDurationHistogram.observe({ url: url }, requestDuration);
+        httpResponseStatusCodeGauge.set({ url }, statusCode);
+        httpResponsesTotalCounter.inc({ url, status_class: statusClass(statusCode) });
+        requestDurationHistogram.observe({ url }, requestDuration);
 
         try {
             await client.insert({
