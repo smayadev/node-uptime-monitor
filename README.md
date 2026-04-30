@@ -27,23 +27,28 @@ This `.env` is used by Docker Compose (for the MariaDB and ClickHouse containers
 
 ### Database / required for non-default setups
 
-ClickHouse (see also `docker/clickhouse/clickhouse-init.sql`):
+ClickHouse (see also `docker/clickhouse/clickhouse-init.sh`):
 
 - `CLICKHOUSE_HOST` - hostname of the ClickHouse instance (default: `clickhouse`)
 - `CLICKHOUSE_INTERFACE` - `http` or `https` (default: `http`; `https` may require additional settings)
 - `CLICKHOUSE_HTTP_PORT` - port for the ClickHouse HTTP API (default: `8123`)
-- `CLICKHOUSE_USER` - user with access to the database (default: `default`)
-- `CLICKHOUSE_PASSWORD` - password for that user
+- `CLICKHOUSE_USER` - admin user used by the init script and by `common.js` if no per-service override is set (default: `default`)
+- `CLICKHOUSE_PASSWORD` - password for the admin user
 - `CLICKHOUSE_DB` - database name (default: `uptime_monitor`)
 - `CLICKHOUSE_TABLE` - table name (default: `uptime_data`)
+- `CLICKHOUSE_MONITOR_USER` - least-privilege user the monitor service connects as; `INSERT`-only on `uptime_data` (default: `monitor`)
+- `CLICKHOUSE_MONITOR_PASSWORD` - password for the monitor user
 
-MariaDB (see also `docker/mariadb/mariadb-init.sql`):
+MariaDB (see also `docker/mariadb/mariadb-init.sh`):
 
 - `MARIADB_HOST` - hostname of the MariaDB instance (default: `mariadb`)
-- `MYSQL_USER` - user with access to the database (default: `user`)
-- `MYSQL_PASSWORD` - password for that user
 - `MYSQL_DATABASE` - database name (default: `uptime_monitor`)
 - `MYSQL_ROOT_PASSWORD` - used by the MariaDB container at first start
+- `MYSQL_USER` / `MYSQL_PASSWORD` - the MariaDB image creates this user at first boot; the init script then drops it. Application services do **not** connect with these credentials.
+- `API_DB_USER` - least-privilege user the API service connects as; `SELECT`/`INSERT`/`UPDATE`/`DELETE` on `urls` only (default: `api_user`)
+- `API_DB_PASSWORD` - password for the API user
+- `MONITOR_DB_USER` - least-privilege user the monitor service connects as; `SELECT` on `urls` only (default: `monitor_user`)
+- `MONITOR_DB_PASSWORD` - password for the monitor user
 
 ### API authentication (required)
 
@@ -68,6 +73,17 @@ docker-compose up -d
 ```
 
 That's it!
+
+### Upgrading from a pre-least-privilege deployment
+
+If you have an existing deployment from before the least-privilege DB users were introduced, the database init scripts only run on first boot so `docker-compose up -d` will leave the old users (and old `monitor` connecting as `default`) in place. To pick up the new users you need a one-time, **destructive** reset that wipes the volumes:
+
+```bash
+docker-compose down -v
+docker-compose up -d
+```
+
+This drops your existing uptime history. If you need to preserve it, dump `uptime_data` first.
 
 ## Tests
 

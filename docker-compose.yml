@@ -10,7 +10,7 @@ services:
       - .env
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./docker/mariadb/mariadb-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/mariadb/mariadb-init.sh:/docker-entrypoint-initdb.d/init.sh
     networks:
       - monitor-network
 
@@ -20,7 +20,7 @@ services:
     restart: always
     volumes:
       - clickhouse_data:/var/lib/clickhouse
-      - ./docker/clickhouse/clickhouse-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/clickhouse/clickhouse-init.sh:/docker-entrypoint-initdb.d/init.sh
     env_file:
       - .env
     networks:
@@ -36,6 +36,9 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      MYSQL_USER: ${API_DB_USER}
+      MYSQL_PASSWORD: ${API_DB_PASSWORD}
     depends_on:
       - mariadb
       - clickhouse
@@ -52,6 +55,11 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      MYSQL_USER: ${MONITOR_DB_USER}
+      MYSQL_PASSWORD: ${MONITOR_DB_PASSWORD}
+      CLICKHOUSE_USER: ${CLICKHOUSE_MONITOR_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_MONITOR_PASSWORD}
     depends_on:
       - mariadb
       - clickhouse
