@@ -44,10 +44,10 @@ describe('GET /api/urls', () => {
     });
 });
 
-describe('POST /api/add/url', () => {
+describe('POST /api/urls', () => {
     it('rejects non-HTTP URL with 400', async () => {
         const res = await request(app)
-            .post('/api/add/url')
+            .post('/api/urls')
             .send({ url: 'ftp://bad.com' });
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ message: 'Invalid URL' });
@@ -57,7 +57,7 @@ describe('POST /api/add/url', () => {
         queryMariaDBDatabase.mockResolvedValue({});
 
         const res = await request(app)
-            .post('/api/add/url')
+            .post('/api/urls')
             .send({ url: 'https://example.com' });
         expect(res.status).toBe(201);
         expect(res.body).toEqual({ message: 'URL added' });
@@ -72,7 +72,7 @@ describe('POST /api/add/url', () => {
         queryMariaDBDatabase.mockRejectedValue(new Error('DB error'));
 
         const res = await request(app)
-            .post('/api/add/url')
+            .post('/api/urls')
             .send({ url: 'https://example.com' });
         expect(res.status).toBe(500);
         expect(spy).toHaveBeenCalled();
@@ -80,23 +80,19 @@ describe('POST /api/add/url', () => {
     });
 });
 
-describe('POST /api/delete/url', () => {
+describe('DELETE /api/urls/:id', () => {
     it('rejects non-integer ID with 400', async () => {
-        const res = await request(app)
-            .post('/api/delete/url')
-            .send({ id: 'abc' });
+        const res = await request(app).delete('/api/urls/abc');
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ message: 'Invalid ID' });
     });
 
-    it('deletes valid ID and returns 201', async () => {
+    it('deletes valid ID and returns 204', async () => {
         queryMariaDBDatabase.mockResolvedValue({});
 
-        const res = await request(app)
-            .post('/api/delete/url')
-            .send({ id: 1 });
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ message: 'URL deleted' });
+        const res = await request(app).delete('/api/urls/1');
+        expect(res.status).toBe(204);
+        expect(res.body).toEqual({});
         expect(queryMariaDBDatabase).toHaveBeenCalledWith(
             'DELETE FROM urls WHERE id = ?',
             [1]
@@ -107,35 +103,55 @@ describe('POST /api/delete/url', () => {
         const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
         queryMariaDBDatabase.mockRejectedValue(new Error('DB error'));
 
-        const res = await request(app)
-            .post('/api/delete/url')
-            .send({ id: 1 });
+        const res = await request(app).delete('/api/urls/1');
         expect(res.status).toBe(500);
         expect(spy).toHaveBeenCalled();
         spy.mockRestore();
     });
 });
 
-describe('POST /api/ack/url', () => {
+describe('PATCH /api/urls/:id', () => {
     it('rejects non-integer ID with 400', async () => {
         const res = await request(app)
-            .post('/api/ack/url')
-            .send({ id: 'abc' });
+            .patch('/api/urls/abc')
+            .send({ ack: true });
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ message: 'Invalid ID' });
     });
 
-    it('acks valid ID and returns 201', async () => {
+    it('rejects non-boolean ack with 400', async () => {
+        const res = await request(app)
+            .patch('/api/urls/1')
+            .send({ ack: 'yes' });
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ message: 'Invalid ack value' });
+    });
+
+    it('acks valid ID and returns 200', async () => {
         queryMariaDBDatabase.mockResolvedValue({});
 
         const res = await request(app)
-            .post('/api/ack/url')
-            .send({ id: 1 });
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ message: "URL ack'd" });
+            .patch('/api/urls/1')
+            .send({ ack: true });
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ message: 'URL updated' });
         expect(queryMariaDBDatabase).toHaveBeenCalledWith(
-            'UPDATE urls SET ack = 1 WHERE id = ?',
-            [1]
+            'UPDATE urls SET ack = ? WHERE id = ?',
+            [1, 1]
+        );
+    });
+
+    it('unacks valid ID and returns 200', async () => {
+        queryMariaDBDatabase.mockResolvedValue({});
+
+        const res = await request(app)
+            .patch('/api/urls/1')
+            .send({ ack: false });
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ message: 'URL updated' });
+        expect(queryMariaDBDatabase).toHaveBeenCalledWith(
+            'UPDATE urls SET ack = ? WHERE id = ?',
+            [0, 1]
         );
     });
 
@@ -144,44 +160,8 @@ describe('POST /api/ack/url', () => {
         queryMariaDBDatabase.mockRejectedValue(new Error('DB error'));
 
         const res = await request(app)
-            .post('/api/ack/url')
-            .send({ id: 1 });
-        expect(res.status).toBe(500);
-        expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
-    });
-});
-
-describe('POST /api/unack/url', () => {
-    it('rejects non-integer ID with 400', async () => {
-        const res = await request(app)
-            .post('/api/unack/url')
-            .send({ id: 'abc' });
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ message: 'Invalid ID' });
-    });
-
-    it('unacks valid ID and returns 201', async () => {
-        queryMariaDBDatabase.mockResolvedValue({});
-
-        const res = await request(app)
-            .post('/api/unack/url')
-            .send({ id: 1 });
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ message: "URL unack'd" });
-        expect(queryMariaDBDatabase).toHaveBeenCalledWith(
-            'UPDATE urls SET ack = 0 WHERE id = ?',
-            [1]
-        );
-    });
-
-    it('returns 500 on database error', async () => {
-        const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-        queryMariaDBDatabase.mockRejectedValue(new Error('DB error'));
-
-        const res = await request(app)
-            .post('/api/unack/url')
-            .send({ id: 1 });
+            .patch('/api/urls/1')
+            .send({ ack: true });
         expect(res.status).toBe(500);
         expect(spy).toHaveBeenCalled();
         spy.mockRestore();

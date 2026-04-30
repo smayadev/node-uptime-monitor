@@ -117,13 +117,13 @@ Example response:
 [{"id":1,"url":"https://www.example1.com","ack":0,"created_at":"2025-02-15T23:33:44.000Z"},{"id":2,"url":"https://www.example2.com","ack":0,"created_at":"2025-02-15T23:34:11.000Z"},{"id":3,"url":"https://www.example3.com","ack":0,"created_at":"2025-02-15T23:34:24.000Z"}]
 ```
 
-### POST /api/add/url
+### POST /api/urls
 
-Add a new URL.
+Add a new URL. Returns `201 Created`.
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/api/add/url \
+curl -X POST http://127.0.0.1:8081/api/urls \
      -H "Content-Type: application/json" \
      -d '{"url": "https://www.example4.com"}'
 ```
@@ -133,52 +133,36 @@ Example response:
 {"message":"URL added"}
 ```
 
-### POST /api/delete/url
+### DELETE /api/urls/:id
 
-Delete a URL.
+Delete a URL. Returns `204 No Content`.
 
 Example request:
 ```bash
-curl -X POST http://127.0.0.1:8081/api/delete/url \
+curl -X DELETE http://127.0.0.1:8081/api/urls/2
+```
+
+### PATCH /api/urls/:id
+
+Ack (stop monitoring) or unack (resume monitoring) a URL. The body's `ack` field is a boolean: `true` to ack, `false` to unack. Returns `200 OK`.
+
+Example request (ack):
+```bash
+curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
      -H "Content-Type: application/json" \
-     -d '{"id": 2}'
+     -d '{"ack": true}'
+```
+
+Example request (unack):
+```bash
+curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
+     -H "Content-Type: application/json" \
+     -d '{"ack": false}'
 ```
 
 Example response:
 ```json
-{"message":"URL deleted"}
-```
-
-### POST /api/ack/url
-
-Ack a URL (stop monitoring it).
-
-Example request:
-```bash
-curl -X POST http://127.0.0.1:8081/api/ack/url \
-     -H "Content-Type: application/json" \
-     -d '{"id": 2}'
-```
-
-Example response:
-```json
-{"message":"URL ack'd"}
-```
-
-### POST /api/unack/url
-
-Unack a URL (begin monitoring again).
-
-Example request:
-```bash
-curl -X POST http://127.0.0.1:8081/api/unack/url \
-     -H "Content-Type: application/json" \
-     -d '{"id": 2}'
-```
-
-Example response:
-```json
-{"message":"URL unack'd"}
+{"message":"URL updated"}
 ```
 
 ## Troubleshooting
