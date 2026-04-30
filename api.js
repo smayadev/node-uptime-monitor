@@ -1,8 +1,27 @@
+const crypto = require('crypto');
 const express = require('express');
 const config = require('./config');
 const { queryMariaDBDatabase } = require('./common');
 const app = express();
 const port = config.api_port;
+
+if (!config.api_auth_token || config.api_auth_token.length < 32) {
+    throw new Error('API_AUTH_TOKEN must be set and at least 32 characters');
+}
+
+const expectedTokenHash = crypto.createHash('sha256').update(config.api_auth_token).digest();
+
+const requireAuth = (req, res, next) => {
+    const header = req.headers.authorization;
+    if (typeof header !== 'string' || !header.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const providedHash = crypto.createHash('sha256').update(header.slice(7)).digest();
+    if (!crypto.timingSafeEqual(providedHash, expectedTokenHash)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    return next();
+};
 
 app.use(express.json());
 
@@ -25,6 +44,8 @@ app.get('/', (req, res) => {
         message: 'Hello World!'
     });
 });
+
+app.use('/api', requireAuth);
 
 app.get('/api/urls', async (req, res) => {
     try {

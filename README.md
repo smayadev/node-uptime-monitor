@@ -45,6 +45,10 @@ MariaDB (see also `docker/mariadb/mariadb-init.sql`):
 - `MYSQL_DATABASE` - database name (default: `uptime_monitor`)
 - `MYSQL_ROOT_PASSWORD` - used by the MariaDB container at first start
 
+### API authentication (required)
+
+- `API_AUTH_TOKEN` - shared secret used as a bearer token on every `/api/*` request. Must be at least 32 characters; the API will refuse to start otherwise. Generate one with `openssl rand -hex 32`.
+
 ### Optional overrides
 
 - `CHECK_INTERVAL_MS` - milliseconds between monitoring checks (default: `60000`)
@@ -101,7 +105,9 @@ http://127.0.0.1:9091/metrics
 
 The API provides a way to manage URLs in the MariaDB database.
 
-There is no authentication system in place so an API gateway of some sort is needed.
+### Authentication
+
+Every `/api/*` route requires an `Authorization: Bearer <token>` header where `<token>` matches `API_AUTH_TOKEN`. Comparison is constant-time. Requests without the header, or with the wrong token, return `401 Unauthorized`.
 
 ### GET /api/urls
 
@@ -109,7 +115,8 @@ Get all URLs in the database.
 
 Example request:
 ```bash
-curl -X GET http://127.0.0.1:8081/api/urls
+curl -X GET http://127.0.0.1:8081/api/urls \
+     -H "Authorization: Bearer your-token-here"
 ```
 
 Example response:
@@ -124,6 +131,7 @@ Add a new URL. Returns `201 Created`.
 Example request:
 ```bash
 curl -X POST http://127.0.0.1:8081/api/urls \
+     -H "Authorization: Bearer your-token-here" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://www.example4.com"}'
 ```
@@ -139,7 +147,8 @@ Delete a URL. Returns `204 No Content`.
 
 Example request:
 ```bash
-curl -X DELETE http://127.0.0.1:8081/api/urls/2
+curl -X DELETE http://127.0.0.1:8081/api/urls/2 \
+     -H "Authorization: Bearer your-token-here"
 ```
 
 ### PATCH /api/urls/:id
@@ -149,6 +158,7 @@ Ack (stop monitoring) or unack (resume monitoring) a URL. The body's `ack` field
 Example request (ack):
 ```bash
 curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
+     -H "Authorization: Bearer your-token-here" \
      -H "Content-Type: application/json" \
      -d '{"ack": true}'
 ```
@@ -156,6 +166,7 @@ curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
 Example request (unack):
 ```bash
 curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
+     -H "Authorization: Bearer your-token-here" \
      -H "Content-Type: application/json" \
      -d '{"ack": false}'
 ```
@@ -177,7 +188,3 @@ Access ClickHouse in the Docker container:
 docker exec -it uptime_monitor_clickhouse bash
 clickhouse-client
 ```
-
-## Roadmap
-
-- all done for now

@@ -8,6 +8,7 @@ module.exports = {
     checkInterval: num(env.CHECK_INTERVAL_MS, 60000),
     timeout: num(env.REQUEST_TIMEOUT_MS, 5000),
     api_port: num(env.API_PORT, 8081),
+    api_auth_token: env.API_AUTH_TOKEN || '',
     prometheus_port: num(env.PROMETHEUS_PORT, 9091),
     prometheus_host: env.PROMETHEUS_HOST || '127.0.0.1',
     prometheus_protocol: env.PROMETHEUS_PROTOCOL || 'http',
