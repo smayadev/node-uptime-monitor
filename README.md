@@ -109,6 +109,8 @@ The API provides a way to manage URLs in the MariaDB database.
 
 Every `/api/*` route requires an `Authorization: Bearer <token>` header where `<token>` matches `API_AUTH_TOKEN`. Comparison is constant-time. Requests without the header, or with the wrong token, return `401 Unauthorized`.
 
+The curl examples below reference `$API_AUTH_TOKEN`; export it in your shell first.
+
 ### GET /api/urls
 
 Get all URLs in the database.
@@ -116,7 +118,7 @@ Get all URLs in the database.
 Example request:
 ```bash
 curl -X GET http://127.0.0.1:8081/api/urls \
-     -H "Authorization: Bearer your-token-here"
+     -H "Authorization: Bearer $API_AUTH_TOKEN"
 ```
 
 Example response:
@@ -131,7 +133,7 @@ Add a new URL. Returns `201 Created`.
 Example request:
 ```bash
 curl -X POST http://127.0.0.1:8081/api/urls \
-     -H "Authorization: Bearer your-token-here" \
+     -H "Authorization: Bearer $API_AUTH_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://www.example4.com"}'
 ```
@@ -148,7 +150,7 @@ Delete a URL. Returns `204 No Content`.
 Example request:
 ```bash
 curl -X DELETE http://127.0.0.1:8081/api/urls/2 \
-     -H "Authorization: Bearer your-token-here"
+     -H "Authorization: Bearer $API_AUTH_TOKEN"
 ```
 
 ### PATCH /api/urls/:id
@@ -158,7 +160,7 @@ Ack (stop monitoring) or unack (resume monitoring) a URL. The body's `ack` field
 Example request (ack):
 ```bash
 curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
-     -H "Authorization: Bearer your-token-here" \
+     -H "Authorization: Bearer $API_AUTH_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"ack": true}'
 ```
@@ -166,7 +168,7 @@ curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
 Example request (unack):
 ```bash
 curl -X PATCH http://127.0.0.1:8081/api/urls/2 \
-     -H "Authorization: Bearer your-token-here" \
+     -H "Authorization: Bearer $API_AUTH_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"ack": false}'
 ```
