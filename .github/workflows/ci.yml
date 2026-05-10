@@ -112,13 +112,13 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Snyk open source (dependencies)
-        uses: snyk/actions/node@cdb760004ba9ea4d525f2e043745dfe85bb9077e
+        uses: snyk/actions/node@9cf6ca713d71123d2d229cc3d7f145b96ea3c518
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
       - name: Snyk Code (SAST)
-        uses: snyk/actions/node@cdb760004ba9ea4d525f2e043745dfe85bb9077e
+        uses: snyk/actions/node@9cf6ca713d71123d2d229cc3d7f145b96ea3c518
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
